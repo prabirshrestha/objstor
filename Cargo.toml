@@ -4,6 +4,8 @@ version = "0.1.0"
 authors = ["Prabir Shrestha <mail@prabir.me>"]
 description = "objstor"
 edition = "2018"
+license = "MIT"
+repository = "https://github.com/prabirshrestha/objstor"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
