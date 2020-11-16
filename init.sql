@@ -8,7 +8,7 @@ CREATE TABLE users (
   ufname    VARCHAR(500),                 -- user friendly name
   uctime    DATETIME NOT NULL,            -- user created time
   umtime    DATETIME NOT NULL,            -- user modified time
-  PRIMARY KEY (id)
+  PRIMARY KEY (uid)
 );
 
 DROP TABLE IF EXISTS objs;
