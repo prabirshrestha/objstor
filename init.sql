@@ -25,6 +25,6 @@ CREATE TABLE objs (
   name      TEXT NOT NULL,      -- name
   ext       TEXT NOT NULL,      -- extension
   text      TEXT,               -- text to full text search
-  data      JSON,				-- extra data associated with data
+  data      JSON,               -- extra data associated with data
   PRIMARY KEY (id)
 );
