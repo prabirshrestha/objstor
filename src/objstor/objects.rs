@@ -2,6 +2,7 @@ use chrono::Utc;
 
 pub struct Object {
     pub id: String,
+    pub pid: Option<String>,
     pub isdir: bool,
     pub name: String,
     pub ext: String,
