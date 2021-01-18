@@ -1,5 +1,6 @@
 pub struct User {
-    pub uid: String,
-    pub uname: String,
-    pub upassword: String,
+    pub id: String,
+    pub name: String,
+    pub password: String,
+    pub locked: bool,
 }
