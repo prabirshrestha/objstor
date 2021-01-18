@@ -19,7 +19,7 @@ impl Config {
         let addr = format!("0.0.0.0:{}", port);
 
         let conn_str =
-            env::var("CONNECTION_STRING").unwrap_or_else(|_| String::from("sqlite::memory:"));
+            env::var("CONNECTION_STRING").unwrap_or_else(|_| String::from("sqlite:data.db"));
 
         let root_url = env::var("ROOT_URL").unwrap_or_else(|_| addr.clone());
 
