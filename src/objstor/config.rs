@@ -1,12 +1,15 @@
-use anyhow::Result;
-use std::env;
+use anyhow::{bail, Result};
 use std::net::SocketAddr;
+use std::{env, sync::Arc};
+
+use super::{new_sqlite_user_backend, UserBackend};
 
 pub struct Config {
     addr: String,
     blob_conn_str: String,
     db_conn_str: String,
     root_url: String,
+    user_backend: Box<dyn UserBackend>,
 }
 
 impl Config {
@@ -25,6 +28,12 @@ impl Config {
         let db_conn_str = env::var("DB_CONNECTION_STRING")
             .unwrap_or_else(|_| String::from("sqlite:./data/data.db"));
 
+        let user_backend = if db_conn_str.starts_with("sqlite:") {
+            Box::new(new_sqlite_user_backend())
+        } else {
+            bail!("connection string not supported");
+        };
+
         let root_url = env::var("ROOT_URL").unwrap_or_else(|_| addr.clone());
 
         Ok(Config {
@@ -32,6 +41,7 @@ impl Config {
             blob_conn_str,
             db_conn_str,
             root_url,
+            user_backend,
         })
     }
 
