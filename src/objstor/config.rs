@@ -4,7 +4,8 @@ use std::net::SocketAddr;
 
 pub struct Config {
     addr: String,
-    conn_str: String,
+    blob_conn_str: String,
+    db_conn_str: String,
     root_url: String,
 }
 
@@ -18,14 +19,18 @@ impl Config {
 
         let addr = format!("0.0.0.0:{}", port);
 
-        let conn_str =
-            env::var("CONNECTION_STRING").unwrap_or_else(|_| String::from("sqlite:data.db"));
+        let blob_conn_str =
+            env::var("BLOB_CONNECTION_STRING").unwrap_or_else(|_| String::from("file:./data"));
+
+        let db_conn_str =
+            env::var("DB_CONNECTION_STRING").unwrap_or_else(|_| String::from("sqlite:data.db"));
 
         let root_url = env::var("ROOT_URL").unwrap_or_else(|_| addr.clone());
 
         Ok(Config {
             addr,
-            conn_str,
+            blob_conn_str,
+            db_conn_str,
             root_url,
         })
     }
@@ -35,8 +40,12 @@ impl Config {
         Ok(addr)
     }
 
-    pub fn conn_str(&self) -> &str {
-        &self.conn_str
+    pub fn db_conn_str(&self) -> &str {
+        &self.db_conn_str
+    }
+
+    pub fn blob_conn_str(&self) -> &str {
+        &self.blob_conn_str
     }
 
     pub fn root_url(&self) -> &str {
