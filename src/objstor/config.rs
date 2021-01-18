@@ -5,6 +5,7 @@ use std::net::SocketAddr;
 pub struct Config {
     addr: String,
     conn_str: String,
+    root_url: String,
 }
 
 impl Config {
@@ -20,7 +21,13 @@ impl Config {
         let conn_str =
             env::var("CONNECTION_STRING").unwrap_or_else(|_| String::from("sqlite::memory:"));
 
-        Ok(Config { addr, conn_str })
+        let root_url = env::var("ROOT_URL").unwrap_or_else(|_| addr.clone());
+
+        Ok(Config {
+            addr,
+            conn_str,
+            root_url,
+        })
     }
 
     pub fn get_addr(&self) -> Result<SocketAddr> {
@@ -30,5 +37,9 @@ impl Config {
 
     pub fn conn_str(&self) -> &str {
         &self.conn_str
+    }
+
+    pub fn root_url(&self) -> &str {
+        &self.root_url
     }
 }
