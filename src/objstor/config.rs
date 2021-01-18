@@ -19,11 +19,11 @@ impl Config {
 
         let addr = format!("0.0.0.0:{}", port);
 
-        let blob_conn_str =
-            env::var("BLOB_CONNECTION_STRING").unwrap_or_else(|_| String::from("file:./data"));
+        let blob_conn_str = env::var("BLOB_CONNECTION_STRING")
+            .unwrap_or_else(|_| String::from("file://./data/blobs"));
 
-        let db_conn_str =
-            env::var("DB_CONNECTION_STRING").unwrap_or_else(|_| String::from("sqlite:data.db"));
+        let db_conn_str = env::var("DB_CONNECTION_STRING")
+            .unwrap_or_else(|_| String::from("sqlite:./data/data.db"));
 
         let root_url = env::var("ROOT_URL").unwrap_or_else(|_| addr.clone());
 
