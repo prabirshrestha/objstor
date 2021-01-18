@@ -1,4 +1,5 @@
 use anyhow::Result;
+use async_trait::async_trait;
 
 pub struct User {
     pub id: String,
@@ -7,9 +8,10 @@ pub struct User {
     pub locked: bool,
 }
 
+#[async_trait]
 pub trait UserBackend {
-    fn get_by_id(&self, id: &str) -> Result<Option<User>>;
-    fn get_by_username(&self, username: &str) -> Result<Option<User>>;
-    fn insert(&self, user: &User) -> Result<String>;
-    fn update(&self, user: &User) -> Result<()>;
+    async fn get_by_id(&self, id: &str) -> Result<Option<User>>;
+    async fn get_by_username(&self, username: &str) -> Result<Option<User>>;
+    async fn insert(&self, user: &User) -> Result<String>;
+    async fn update(&self, user: &User) -> Result<()>;
 }
