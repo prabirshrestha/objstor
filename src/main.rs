@@ -5,6 +5,7 @@ use objstor::User;
 
 #[async_std::main]
 async fn main() -> Result<()> {
-    println!("Hello, world!");
+    let app = tide::new();
+    app.listen("127.0.0.1:3000").await?;
     Ok(())
 }
