@@ -1,9 +1,13 @@
+use chrono::Utc;
+
 pub struct Object {
     pub id: String,
-    pub isfile: bool,
-    pub fmod: i32,
+    pub isdir: bool,
     pub name: String,
     pub ext: String,
+    pub size: u64,
+    pub mtime: Utc,
     pub text: String,
-    pub data: String,
+    pub md5: String,
+    pub sha256: String,
 }
