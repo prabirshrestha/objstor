@@ -1,9 +1,14 @@
 use chrono::Utc;
 
+pub enum ObjectKind {
+    Dir,
+    Blob,
+}
+
 pub struct Object {
     pub id: String,
     pub pid: Option<String>,
-    pub isdir: bool,
+    pub kind: ObjectKind,
     pub name: String,
     pub ext: String,
     pub size: u64,

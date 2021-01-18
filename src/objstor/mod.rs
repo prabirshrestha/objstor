@@ -4,6 +4,6 @@ mod objects;
 mod user;
 
 pub use backends::*;
-pub use config::Config;
-pub use objects::Object;
-pub use user::{User, UserBackend};
+pub use config::*;
+pub use objects::*;
+pub use user::*;
