@@ -20,8 +20,9 @@ impl Config {
         // TODO: generate random secret
         let secret = env::var("SECRET").unwrap_or_else(|_| String::from("objstorsecret"));
 
-        let var_name = Ok(Config { addr, secret });
-        var_name
+        let connstr = env::var("CONNECTION_STRING").unwrap_or_else(|_| String::from("objstor.db"));
+
+        Ok(Config { addr, secret })
     }
 
     pub fn get_addr(&self) -> Result<SocketAddr> {
