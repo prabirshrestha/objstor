@@ -1,25 +1,28 @@
 use crate::objstor::{User, UserBacked};
 use async_trait::async_trait;
+use sqlx::SqlitePool;
 
-pub struct SqliteUserBackend {}
+pub struct SqliteUserBackend<'a> {
+    pool: &'a SqlitePool,
+}
 
-impl SqliteUserBackend {
-    fn new(connstr: &str) -> Self {
-        SqliteUserBackend {}
+impl<'a> SqliteUserBackend<'a> {
+    pub fn new(pool: &'a SqlitePool) -> Self {
+        SqliteUserBackend { pool }
     }
 }
 
 #[async_trait]
-impl UserBacked for SqliteUserBackend {
-    async fn init() -> anyhow::Result<()> {
+impl<'a> UserBacked for SqliteUserBackend<'a> {
+    async fn init(&self) -> anyhow::Result<()> {
         todo!()
     }
 
-    async fn create_user(user: &User) -> anyhow::Result<Option<String>> {
+    async fn create_user(&self, user: &User) -> anyhow::Result<Option<String>> {
         todo!()
     }
 
-    async fn validate_password(username: &str, password: &str) -> anyhow::Result<bool> {
+    async fn validate_password(&self, username: &str, password: &str) -> anyhow::Result<bool> {
         todo!()
     }
 }

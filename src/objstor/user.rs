@@ -12,7 +12,7 @@ pub struct User {
 
 #[async_trait]
 pub trait UserBacked {
-    async fn init() -> Result<()>;
-    async fn create_user(user: &User) -> Result<Option<String>>;
-    async fn validate_password(username: &str, password: &str) -> Result<bool>;
+    async fn init(&self) -> Result<()>;
+    async fn create_user(&self, user: &User) -> Result<Option<String>>;
+    async fn validate_password(&self, username: &str, password: &str) -> Result<bool>;
 }

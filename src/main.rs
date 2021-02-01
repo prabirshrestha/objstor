@@ -1,13 +1,20 @@
 mod objstor;
 
 use anyhow::Result;
-use objstor::Config;
+use objstor::{backend::SqliteUserBackend, AppState, Config};
+use sqlx::{sqlite::SqliteConnectOptions, SqlitePool};
 use tide::prelude::*;
 
 #[async_std::main]
 async fn main() -> Result<()> {
     let config = Config::new_from_env()?;
     let addr = config.get_addr()?;
+
+    let pool =
+        SqlitePool::connect_with(SqliteConnectOptions::new().create_if_missing(true)).await?;
+    let _appstate = AppState {
+        user: &SqliteUserBackend::new(&pool),
+    };
 
     let mut app = tide::new();
 
