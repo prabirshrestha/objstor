@@ -1,7 +1,7 @@
 mod objstor;
 
 use anyhow::Result;
-use objstor::{Config, User};
+use objstor::Config;
 use tide::prelude::*;
 
 #[async_std::main]
