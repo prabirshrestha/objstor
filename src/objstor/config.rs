@@ -21,7 +21,9 @@ impl Config {
         // TODO: generate random secret
         let secret = env::var("SECRET").unwrap_or_else(|_| String::from("objstorsecret"));
 
-        let conn_str = env::var("CONNECTION_STRING").unwrap_or_else(|_| String::from("objstor.db"));
+        // NOTE: rwc -> read/write/create if not exist
+        let conn_str = env::var("CONNECTION_STRING")
+            .unwrap_or_else(|_| String::from("sqlite:./objstor.db?mode=rwc"));
 
         Ok(Config {
             addr,

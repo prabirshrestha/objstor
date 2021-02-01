@@ -10,11 +10,12 @@ async fn main() -> Result<()> {
     let config = Config::new_from_env()?;
     let addr = config.get_addr()?;
 
-    let pool =
-        SqlitePool::connect_with(SqliteConnectOptions::new().create_if_missing(true)).await?;
-    let _appstate = AppState {
+    let pool = SqlitePool::connect(config.get_conn_str()).await?;
+    let appstate = AppState {
         user: &SqliteUserBackend::new(&pool),
     };
+
+    appstate.user.init().await?;
 
     let mut app = tide::new();
 
