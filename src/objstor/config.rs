@@ -21,6 +21,12 @@ impl Config {
         // TODO: generate random secret
         let secret = env::var("SECRET").unwrap_or_else(|_| String::from("CHANGEME-OBJSTOR"));
 
+        if secret == "CHANGEME-OBJSTOR" {
+            println!(
+                "You are using the default objstor secret. Please change for increased security."
+            );
+        }
+
         // NOTE: rwc -> read/write/create if not exist
         let conn_str = env::var("CONNECTION_STRING")
             .unwrap_or_else(|_| String::from("sqlite:./objstor.db?mode=rwc"));
