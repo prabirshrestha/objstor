@@ -51,6 +51,10 @@ impl<'a> UserBacked for SqliteUserBackend<'a> {
             .bind(1)
             .execute(&mut conn)
             .await?;
+
+            println!(
+                "Default admin user created. Please change the password for increased security"
+            );
         }
 
         // type: osfs, s3
