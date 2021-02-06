@@ -1,4 +1,4 @@
-use crate::objstor::{User, UserBacked};
+use crate::objstor::{uuid, User, UserBacked};
 use async_trait::async_trait;
 use chrono::Utc;
 use sqlx::{Executor, SqlitePool};
@@ -42,7 +42,7 @@ impl<'a> UserBacked for SqliteUserBackend<'a> {
                     VALUES
                     (?, ?, ?, ?, ?, ?)"#,
             )
-            .bind("1")
+            .bind(uuid()?)
             .bind("admin")
             .bind("admin")
             .bind(Utc::now())
