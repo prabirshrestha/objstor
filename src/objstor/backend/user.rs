@@ -40,6 +40,26 @@ impl<'a> UserBacked for SqliteUserBackend<'a> {
             )"#,
         )
         .await?;
+
+        conn.execute(
+            r#"CREATE TABLE IF NOT EXISTS object (
+                id varchar(256) PRIMARY KEY,
+                parent_id varchar(256),
+                storage_id varchar(256) NOT NULL,
+                name TEXT NOT NULL,
+                type ObjectType NOT NULL CHECK (type IN (0,1)), -- 0:file, 1:dir
+                ctime DATETIME NOT NULL,
+                mtime DATETIME NOT NULL,
+                md5 varchar(32) NOT NULL,
+                sha256 varchar(256) NOT NULL,
+                description TEXT,                               -- full text search
+                data JSON,                                      -- extra metadata
+                FOREIGN KEY (parent_id) REFERENCES objects (id),
+                FOREIGN KEY (storage_id) REFERENCES storage (id)
+            )"#,
+        )
+        .await?;
+
         Ok(())
     }
 
