@@ -19,7 +19,7 @@ impl Config {
         let addr = format!("0.0.0.0:{}", port);
 
         // TODO: generate random secret
-        let secret = env::var("SECRET").unwrap_or_else(|_| String::from("objstorsecret"));
+        let secret = env::var("SECRET").unwrap_or_else(|_| String::from("CHANGEME-OBJSTOR"));
 
         // NOTE: rwc -> read/write/create if not exist
         let conn_str = env::var("CONNECTION_STRING")

@@ -12,7 +12,7 @@ async fn main() -> Result<()> {
 
     let pool = SqlitePool::connect(config.get_conn_str()).await?;
     let appstate = AppState {
-        user: &SqliteUserBackend::new(&pool),
+        user: &SqliteUserBackend::new(&config, &pool),
     };
 
     appstate.user.init().await?;

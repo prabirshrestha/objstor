@@ -1,15 +1,16 @@
-use crate::objstor::{uuid, User, UserBacked};
+use crate::objstor::{hash_with_salt, uuid, Config, User, UserBacked};
 use async_trait::async_trait;
 use chrono::Utc;
 use sqlx::{Executor, SqlitePool};
 
 pub struct SqliteUserBackend<'a> {
+    config: &'a Config,
     pool: &'a SqlitePool,
 }
 
 impl<'a> SqliteUserBackend<'a> {
-    pub fn new(pool: &'a SqlitePool) -> Self {
-        SqliteUserBackend { pool }
+    pub fn new(config: &'a Config, pool: &'a SqlitePool) -> Self {
+        SqliteUserBackend { config, pool }
     }
 }
 
@@ -44,7 +45,7 @@ impl<'a> UserBacked for SqliteUserBackend<'a> {
             )
             .bind(uuid()?)
             .bind("admin")
-            .bind("admin")
+            .bind(hash_with_salt("admin", self.config.get_secret())?)
             .bind(Utc::now())
             .bind(0)
             .bind(1)
