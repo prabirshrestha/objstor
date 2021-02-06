@@ -1,5 +1,6 @@
 use crate::objstor::{User, UserBacked};
 use async_trait::async_trait;
+use chrono::Utc;
 use sqlx::{Executor, SqlitePool};
 
 pub struct SqliteUserBackend<'a> {
@@ -29,6 +30,29 @@ impl<'a> UserBacked for SqliteUserBackend<'a> {
         )
         .await?;
 
+        let user_count: i64 = sqlx::query_scalar("SELECT count(*) FROM user")
+            .fetch_one(&mut conn)
+            .await?;
+
+        if user_count == 0 {
+            // create admin user
+            let done = sqlx::query(
+                r#"INSERT INTO user
+                    (id, username, password, created, locked, is_admin)
+                    VALUES
+                    (?, ?, ?, ?, ?, ?)"#,
+            )
+            .bind("1")
+            .bind("admin")
+            .bind("admin")
+            .bind(Utc::now())
+            .bind(0)
+            .bind(1)
+            .execute(&mut conn)
+            .await?;
+        }
+
+        // type: osfs, s3
         conn.execute(
             r#"CREATE TABLE IF NOT EXISTS storage (
                 id varchar(256) PRIMARY KEY,
@@ -50,8 +74,8 @@ impl<'a> UserBacked for SqliteUserBackend<'a> {
                 type ObjectType NOT NULL CHECK (type IN (0,1)), -- 0:file, 1:dir
                 ctime DATETIME NOT NULL,
                 mtime DATETIME NOT NULL,
-                md5 varchar(32) NOT NULL,
-                sha256 varchar(256) NOT NULL,
+                md5 varchar(32),
+                sha256 varchar(256),
                 description TEXT,                               -- full text search
                 data JSON,                                      -- extra metadata
                 FOREIGN KEY (parent_id) REFERENCES objects (id),
