@@ -7,7 +7,7 @@ pub struct User {
     pub username: String,
     pub password: Option<String>,
     pub locked: bool,
-    pub created_time: Utc,
+    pub created: Utc,
 }
 
 #[async_trait]
