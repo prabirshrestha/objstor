@@ -12,7 +12,7 @@ pub struct User {
 }
 
 #[async_trait]
-pub trait UserBacked {
+pub trait UserBackend: Send + Sync {
     async fn init(&self) -> Result<()>;
     async fn create_user(&self, user: &User) -> Result<String>;
     async fn validate_password(&self, username: &str, password: &str) -> Result<bool>;

@@ -1,5 +1,7 @@
-use super::UserBacked;
+use super::UserBackend;
+use std::sync::Arc;
 
-pub struct AppState<'a> {
-    pub user: &'a dyn UserBacked,
+#[derive(Clone)]
+pub struct AppState {
+    pub userbackend: Arc<Box<dyn UserBackend>>,
 }

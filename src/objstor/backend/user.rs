@@ -1,22 +1,22 @@
-use crate::objstor::{hash_with_salt, uuid, Config, User, UserBacked};
+use crate::objstor::{hash_with_salt, uuid, Config, User, UserBackend};
 use anyhow::{bail, Result};
 use async_trait::async_trait;
 use chrono::Utc;
 use sqlx::{Executor, SqlitePool};
 
-pub struct SqliteUserBackend<'a> {
-    config: &'a Config,
-    pool: &'a SqlitePool,
+pub struct SqliteUserBackend {
+    config: Box<Config>,
+    pool: Box<SqlitePool>,
 }
 
-impl<'a> SqliteUserBackend<'a> {
-    pub fn new(config: &'a Config, pool: &'a SqlitePool) -> Self {
+impl SqliteUserBackend {
+    pub fn new(config: Box<Config>, pool: Box<SqlitePool>) -> Self {
         SqliteUserBackend { config, pool }
     }
 }
 
 #[async_trait]
-impl<'a> UserBacked for SqliteUserBackend<'a> {
+impl UserBackend for SqliteUserBackend {
     async fn init(&self) -> Result<()> {
         // TODO: add more index
         let mut conn = self.pool.acquire().await?;

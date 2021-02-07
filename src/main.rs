@@ -1,5 +1,7 @@
 mod objstor;
 
+use std::sync::Arc;
+
 use anyhow::Result;
 use objstor::{backend::SqliteUserBackend, AppState, Config};
 use sqlx::SqlitePool;
@@ -11,13 +13,16 @@ async fn main() -> Result<()> {
     let addr = config.get_addr()?;
 
     let pool = SqlitePool::connect(config.get_conn_str()).await?;
+
     let appstate = AppState {
-        user: &SqliteUserBackend::new(&config, &pool),
+        userbackend: Arc::new(Box::new(SqliteUserBackend::new(
+            Box::new(config),
+            Box::new(pool),
+        ))),
     };
+    appstate.userbackend.init().await?;
 
-    appstate.user.init().await?;
-
-    let mut app = tide::new();
+    let mut app = tide::with_state(appstate);
 
     app.at("/").get(|_| async { Ok("Welcome to objstor!") });
 

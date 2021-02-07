@@ -2,6 +2,7 @@ use anyhow::Result;
 use std::env;
 use std::net::SocketAddr;
 
+#[derive(Clone)]
 pub struct Config {
     addr: String,
     secret: String,
