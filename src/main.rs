@@ -36,4 +36,15 @@ async fn main() -> Result<()> {
 
 fn register_routes(app: &mut tide::Server<AppState>) {
     app.at("/").get(|_| async { Ok("Welcome to objstor!") });
+    app.at("/api/users/:id").get(|_| async { Ok("get user") });
+    app.at("/api/users").post(|_| async { Ok("create user") });
+    app.at("/api/users").put(|_| async { Ok("update user") });
+    app.at("/api/storage/:id")
+        .get(|_| async { Ok("get storage") });
+    app.at("/api/storage")
+        .post(|_| async { Ok("create storage") });
+    app.at("/api/storage")
+        .put(|_| async { Ok("update storage") });
+    app.at("/api/storage/:id")
+        .delete(|_| async { Ok("delete storage") });
 }
