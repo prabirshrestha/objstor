@@ -1,4 +1,5 @@
 use crate::objstor::{hash_with_salt, uuid, Config, User, UserBacked};
+use anyhow::{bail, Result};
 use async_trait::async_trait;
 use chrono::Utc;
 use sqlx::{Executor, SqlitePool};
@@ -16,7 +17,7 @@ impl<'a> SqliteUserBackend<'a> {
 
 #[async_trait]
 impl<'a> UserBacked for SqliteUserBackend<'a> {
-    async fn init(&self) -> anyhow::Result<()> {
+    async fn init(&self) -> Result<()> {
         // TODO: add more index
         let mut conn = self.pool.acquire().await?;
         conn.execute(
@@ -37,20 +38,16 @@ impl<'a> UserBacked for SqliteUserBackend<'a> {
 
         if user_count == 0 {
             // create admin user
-            let done = sqlx::query(
-                r#"INSERT INTO user
-                    (id, username, password, created, locked, is_admin)
-                    VALUES
-                    (?, ?, ?, ?, ?, ?)"#,
-            )
-            .bind(uuid()?)
-            .bind("admin")
-            .bind(hash_with_salt("admin", self.config.get_secret())?)
-            .bind(Utc::now())
-            .bind(0)
-            .bind(1)
-            .execute(&mut conn)
-            .await?;
+            let _id = self
+                .create_user(&User {
+                    id: uuid()?,
+                    username: String::from("admin"),
+                    password: Some(String::from("admin")),
+                    created: Utc::now(),
+                    locked: false,
+                    is_admin: true,
+                })
+                .await?;
 
             println!(
                 "Default admin user created. Please change the password for increased security"
@@ -92,11 +89,31 @@ impl<'a> UserBacked for SqliteUserBackend<'a> {
         Ok(())
     }
 
-    async fn create_user(&self, user: &User) -> anyhow::Result<Option<String>> {
-        todo!()
+    async fn create_user(&self, user: &User) -> Result<String> {
+        let mut conn = self.pool.acquire().await?;
+        if user.password.is_none() {
+            bail!("password required");
+        }
+        let password = user.password.clone().unwrap();
+        sqlx::query(
+            r#"INSERT INTO user
+                    (id, username, password, created, locked, is_admin)
+                    VALUES
+                    (?, ?, ?, ?, ?, ?);
+            "#,
+        )
+        .bind(uuid()?)
+        .bind(&user.username)
+        .bind(hash_with_salt(&password, self.config.get_secret())?)
+        .bind(user.created)
+        .bind(user.locked)
+        .bind(user.is_admin)
+        .execute(&mut conn)
+        .await?;
+        Ok(user.id.clone())
     }
 
-    async fn validate_password(&self, username: &str, password: &str) -> anyhow::Result<bool> {
+    async fn validate_password(&self, username: &str, password: &str) -> Result<bool> {
         todo!()
     }
 }
