@@ -2,7 +2,7 @@ mod objstor;
 
 use anyhow::Result;
 use objstor::{backend::SqliteUserBackend, AppState, Config};
-use sqlx::{sqlite::SqliteConnectOptions, SqlitePool};
+use sqlx::SqlitePool;
 use tide::prelude::*;
 
 #[async_std::main]
