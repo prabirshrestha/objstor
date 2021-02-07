@@ -23,8 +23,7 @@ async fn main() -> Result<()> {
     appstate.userbackend.init().await?;
 
     let mut app = tide::with_state(appstate);
-
-    app.at("/").get(|_| async { Ok("Welcome to objstor!") });
+    register_routes(&mut app);
 
     let mut listener = app.bind(addr).await?;
     for info in listener.info().iter() {
@@ -33,4 +32,8 @@ async fn main() -> Result<()> {
 
     listener.accept().await?;
     Ok(())
+}
+
+fn register_routes(app: &mut tide::Server<AppState>) {
+    app.at("/").get(|_| async { Ok("Welcome to objstor!") });
 }
