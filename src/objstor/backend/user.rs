@@ -38,16 +38,15 @@ impl<'a> UserBacked for SqliteUserBackend<'a> {
 
         if user_count == 0 {
             // create admin user
-            let _id = self
-                .create_user(&User {
-                    id: uuid()?,
-                    username: String::from("admin"),
-                    password: Some(String::from("admin")),
-                    created: Utc::now(),
-                    locked: false,
-                    is_admin: true,
-                })
-                .await?;
+            self.create_user(&User {
+                id: uuid()?,
+                username: String::from("admin"),
+                password: Some(String::from("admin")),
+                created: Utc::now(),
+                locked: false,
+                is_admin: true,
+            })
+            .await?;
 
             println!(
                 "Default admin user created. Please change the password for increased security"
@@ -102,7 +101,7 @@ impl<'a> UserBacked for SqliteUserBackend<'a> {
                     (?, ?, ?, ?, ?, ?);
             "#,
         )
-        .bind(uuid()?)
+        .bind(&user.id)
         .bind(&user.username)
         .bind(hash_with_salt(&password, self.config.get_secret())?)
         .bind(user.created)
