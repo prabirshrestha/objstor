@@ -114,6 +114,15 @@ impl<'a> UserBacked for SqliteUserBackend<'a> {
     }
 
     async fn validate_password(&self, username: &str, password: &str) -> Result<bool> {
-        todo!()
+        let mut conn = self.pool.acquire().await?;
+        let count: i32 = sqlx::query_scalar(
+            "SELECT count(*) FROM user WHERE locked=0 and username=? and password=?",
+        )
+        .bind(username)
+        .bind(hash_with_salt(password, self.config.get_secret())?)
+        .fetch_one(&mut conn)
+        .await?;
+
+        Ok(count == 1)
     }
 }
