@@ -1,7 +1,7 @@
 pub mod backend;
 pub mod opt;
-mod run;
 pub mod server;
 pub mod utils;
 
+mod run;
 pub use run::*;
