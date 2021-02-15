@@ -1,6 +1,8 @@
 use super::{ObjstorBackend, User, UserBackend};
-use anyhow::Result;
+use crate::objstor::utils::{hash_with_salt, uuid};
+use anyhow::{bail, Result};
 use async_trait::async_trait;
+use chrono::Utc;
 use sqlx::SqlitePool;
 
 #[derive(Clone, Debug)]
@@ -32,6 +34,24 @@ impl ObjstorBackend for SqliteObjstorBackend {
         )
         .execute(&self.pool)
         .await?;
+
+        let user_count: i64 = sqlx::query_scalar("SELECT count(*) FROM user")
+            .fetch_one(&self.pool)
+            .await?;
+
+        if user_count == 0 {
+            // create admin user
+            self.create_user(&User {
+                id: uuid()?,
+                username: String::from("admin"),
+                password: Some(String::from("admin")),
+                created: Utc::now(),
+                is_locked: false,
+                is_admin: true,
+            })
+            .await?;
+        }
+
         Ok(())
     }
 }
@@ -39,6 +59,26 @@ impl ObjstorBackend for SqliteObjstorBackend {
 #[async_trait]
 impl UserBackend for SqliteObjstorBackend {
     async fn create_user(&mut self, user: &User) -> Result<String> {
-        todo!()
+        if user.password.is_none() {
+            bail!("password required");
+        }
+        let password = user.password.clone().unwrap();
+        sqlx::query(
+            r#"INSERT INTO user
+                    (id, username, password, created, is_locked, is_admin)
+                    VALUES
+                    (?, ?, ?, ?, ?, ?);
+            "#,
+        )
+        .bind(&user.id)
+        .bind(&user.username)
+        .bind(hash_with_salt(&password, "")?)
+        .bind(user.created)
+        .bind(user.is_locked)
+        .bind(user.is_admin)
+        .execute(&self.pool)
+        .await?;
+
+        Ok(user.id.clone())
     }
 }
