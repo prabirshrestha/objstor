@@ -1,11 +1,6 @@
 mod objstor;
 
-use std::sync::Arc;
-
 use anyhow::Result;
-use objstor::{backend::SqliteUserBackend, AppState, Config};
-use sqlx::SqlitePool;
-use tide::prelude::*;
 
 #[async_std::main]
 async fn main() -> Result<()> {

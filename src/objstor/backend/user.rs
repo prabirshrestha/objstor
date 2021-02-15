@@ -1,3 +1,4 @@
+/*
 use crate::objstor::{hash_with_salt, uuid, Config, User, UserBackend};
 use anyhow::{bail, Result};
 use async_trait::async_trait;
@@ -125,3 +126,4 @@ impl UserBackend for SqliteUserBackend {
         Ok(count == 1)
     }
 }
+*/

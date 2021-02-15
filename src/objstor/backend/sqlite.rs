@@ -19,6 +19,6 @@ impl SqliteObjstorBackend {
 #[async_trait]
 impl ObjstorBackend for SqliteObjstorBackend {
     async fn init(&mut self) -> Result<()> {
-        todo!()
+        Ok(())
     }
 }

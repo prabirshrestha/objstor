@@ -1,8 +1,4 @@
-mod user;
-
 pub mod sqlite;
-
-pub use user::*;
 
 use anyhow::Result;
 use async_trait::async_trait;
