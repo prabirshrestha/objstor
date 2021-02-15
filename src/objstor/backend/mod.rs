@@ -15,6 +15,12 @@ pub struct User {
 
 pub struct Storage {
     pub id: String,
+    pub name: String,
+    pub created: DateTime<Utc>,
+    pub provider: String,
+    pub data: String,
+    pub is_locked: bool,
+    pub is_index: bool,
 }
 
 #[async_trait]
