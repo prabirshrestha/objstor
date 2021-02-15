@@ -60,8 +60,8 @@ impl ObjstorBackend for SqliteObjstorBackend {
                 storage_id varchar(256) NOT NULL,
                 name TEXT NOT NULL,
                 type ObjectType NOT NULL CHECK (type IN (0,1)), -- 0:file, 1:dir
-                ctime DATETIME NOT NULL,
-                mtime DATETIME NOT NULL,
+                ctime DATETIME,
+                mtime DATETIME,
                 md5 varchar(32),
                 sha256 varchar(256),
                 description TEXT,                               -- full text search

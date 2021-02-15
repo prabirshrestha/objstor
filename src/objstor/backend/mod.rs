@@ -24,6 +24,19 @@ pub struct Storage {
     pub is_index: bool,
 }
 
+pub struct Object {
+    pub id: String,
+    pub parent_id: Option<String>,
+    pub storage_id: Option<String>,
+    pub name: String,
+    pub object_type: u8,
+    pub ctime: Option<DateTime<Utc>>,
+    pub mtime: Option<DateTime<Utc>>,
+    pub md5: Option<String>,
+    pub sha256: Option<String>,
+    pub description: Option<String>,
+}
+
 #[async_trait]
 pub trait ObjstorBackend: UserBackend + StorageBackend {
     async fn init(&self) -> Result<()>;
@@ -47,3 +60,6 @@ pub trait StorageBackend {
     async fn get_storage(&self, id: &str) -> Result<Storage>;
     async fn remove_storage(&self, id: &str) -> Result<Storage>;
 }
+
+#[async_trait]
+pub trait ObjectBackend {}
