@@ -22,4 +22,10 @@ pub trait ObjstorBackend: UserBackend {
 pub trait UserBackend {
     async fn create_user(&self, user: &User) -> Result<String>;
     async fn validate_user(&self, username: &str, password: &str) -> Result<bool>;
+    async fn change_password(
+        &self,
+        username: &str,
+        current_password: &str,
+        new_password: &str,
+    ) -> Result<()>;
 }
