@@ -79,7 +79,7 @@ impl ObjstorBackend for SqliteObjstorBackend {
         if user_count == 0 {
             // create admin user
             self.create_user(&User {
-                id: uuid()?,
+                id: uuid(),
                 username: String::from("admin"),
                 password: Some(String::from("admin")),
                 created: Utc::now(),
