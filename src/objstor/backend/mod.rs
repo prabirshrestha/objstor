@@ -27,14 +27,19 @@ pub struct Storage {
 pub struct Object {
     pub id: String,
     pub parent_id: Option<String>,
-    pub storage_id: Option<String>,
+    pub storage_id: String,
     pub name: String,
-    pub object_type: u8,
+    pub object_type: ObjectType,
     pub ctime: Option<DateTime<Utc>>,
     pub mtime: Option<DateTime<Utc>>,
     pub md5: Option<String>,
     pub sha256: Option<String>,
     pub description: Option<String>,
+}
+
+pub enum ObjectType {
+    File = 0,
+    Dir = 1,
 }
 
 #[async_trait]
