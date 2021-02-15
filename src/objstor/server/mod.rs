@@ -1,7 +1,12 @@
 pub mod state;
 
+use std::{borrow::BorrowMut, sync::Arc};
+
 use self::state::State;
-use super::opt::Serve;
+use super::{
+    backend::{sqlite::SqliteObjstorBackend, ObjstorBackend},
+    opt::Serve,
+};
 use anyhow::Result;
 use tide::{prelude::*, Server};
 
@@ -18,9 +23,10 @@ pub async fn serve(s: &Serve) -> Result<()> {
     Ok(())
 }
 
-async fn get_app(_s: &Serve) -> Result<Server<State>> {
-    let state = State::default();
+async fn get_app(s: &Serve) -> Result<Server<State>> {
+    let mut objstor_backend = SqliteObjstorBackend::new(&s.connection_string).await?;
+    objstor_backend.init().await?;
+    let state = State::new(Arc::new(objstor_backend));
     let mut app = tide::with_state(state);
     Ok(app)
 }
-
