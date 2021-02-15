@@ -21,4 +21,5 @@ pub trait ObjstorBackend: UserBackend {
 #[async_trait]
 pub trait UserBackend {
     async fn create_user(&self, user: &User) -> Result<String>;
+    async fn validate_user(&self, username: &str, password: &str) -> Result<bool>;
 }

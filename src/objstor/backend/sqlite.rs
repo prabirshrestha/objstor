@@ -83,4 +83,15 @@ impl UserBackend for SqliteObjstorBackend {
 
         Ok(user.id.clone())
     }
+
+    async fn validate_user(&self, username: &str, password: &str) -> Result<bool> {
+        let count: i32 = sqlx::query_scalar(
+            "SELECT count(*) FROM user WHERE locked=0 and username=? and password=?",
+        )
+        .bind(username)
+        .bind(hash_with_salt(password, &self.salt)?)
+        .fetch_one(&self.pool)
+        .await?;
+        Ok(count == 1)
+    }
 }
