@@ -19,12 +19,12 @@ jobs:
           - build: linux
             os: ubuntu-latest
             rust: stable
-            target: x86_64-unknown-linux-musl
+            target: x86_64-unknown-linux-gnu
             usecross: false
           - build: linux-arm
             os: ubuntu-latest
             rust: stable
-            target: arm-unknown-linux-musleabihf
+            target: arm-unknown-linux-gnueabihf
             usecross: true
           - build: macos
             os: macos-latest
