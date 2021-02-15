@@ -1,4 +1,4 @@
-use super::ObjstorBackend;
+use super::{ObjstorBackend, User, UserBackend};
 use anyhow::Result;
 use async_trait::async_trait;
 use sqlx::SqlitePool;
@@ -20,5 +20,12 @@ impl SqliteObjstorBackend {
 impl ObjstorBackend for SqliteObjstorBackend {
     async fn init(&mut self) -> Result<()> {
         Ok(())
+    }
+}
+
+#[async_trait]
+impl UserBackend for SqliteObjstorBackend {
+    async fn create_user(&mut self, user: &User) -> Result<String> {
+        todo!()
     }
 }
