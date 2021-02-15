@@ -29,8 +29,22 @@ impl ObjstorBackend for SqliteObjstorBackend {
                 username varchar(256) UNIQUE NOT NULL,
                 password varchar(256) NOT NULL,
                 created DATETIME NOT NULL,
-                is_locked BOOLEAN NOT NULL CHECK (is_locked IN (0,1)),
-                is_admin BOOLEAN NOT NULL CHECK (is_admin IN (0,1))
+                is_admin BOOLEAN NOT NULL CHECK (is_admin IN (0,1)),
+                is_locked BOOLEAN NOT NULL CHECK (is_locked IN (0,1))
+            )
+            "#,
+        )
+        .execute(&self.pool)
+        .await?;
+
+        sqlx::query(
+            r#"CREATE TABLE IF NOT EXISTS storage (
+                id varchar(256) PRIMARY KEY,
+                name varchar(500) NOT NULL,
+                created DATETIME NOT NULL,
+                type varchar(256) NOT NULL,
+                data TEXT NOT NULL,
+                is_indexed BOOLEAN NOT NULL CHECK (is_indexed IN (0,1))
             )
             "#,
         )
