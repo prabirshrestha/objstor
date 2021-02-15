@@ -23,7 +23,8 @@ pub async fn serve(s: &Serve) -> Result<()> {
 }
 
 async fn get_app(s: &Serve) -> Result<Server<State>> {
-    let mut objstor_backend = SqliteObjstorBackend::new(&s.connection_string).await?;
+    let mut objstor_backend =
+        SqliteObjstorBackend::new(&s.connection_string, s.salt.clone()).await?;
     objstor_backend.init().await?;
     let state = State::new(Arc::new(objstor_backend));
     let mut app = tide::with_state(state);

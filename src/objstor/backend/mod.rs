@@ -15,10 +15,10 @@ pub struct User {
 
 #[async_trait]
 pub trait ObjstorBackend: UserBackend {
-    async fn init(&mut self) -> Result<()>;
+    async fn init(&self) -> Result<()>;
 }
 
 #[async_trait]
 pub trait UserBackend {
-    async fn create_user(&mut self, user: &User) -> Result<String>;
+    async fn create_user(&self, user: &User) -> Result<String>;
 }

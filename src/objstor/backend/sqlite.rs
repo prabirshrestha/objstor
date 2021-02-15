@@ -8,19 +8,21 @@ use sqlx::SqlitePool;
 #[derive(Clone, Debug)]
 pub struct SqliteObjstorBackend {
     pool: SqlitePool,
+    salt: String,
 }
 
 impl SqliteObjstorBackend {
-    pub async fn new(connection_string: &str) -> Result<Self> {
+    pub async fn new(connection_string: &str, salt: String) -> Result<Self> {
         Ok(SqliteObjstorBackend {
             pool: SqlitePool::connect(connection_string).await?,
+            salt,
         })
     }
 }
 
 #[async_trait]
 impl ObjstorBackend for SqliteObjstorBackend {
-    async fn init(&mut self) -> Result<()> {
+    async fn init(&self) -> Result<()> {
         sqlx::query(
             r#"CREATE TABLE IF NOT EXISTS user (
                 id varchar(256) PRIMARY KEY,
@@ -58,7 +60,7 @@ impl ObjstorBackend for SqliteObjstorBackend {
 
 #[async_trait]
 impl UserBackend for SqliteObjstorBackend {
-    async fn create_user(&mut self, user: &User) -> Result<String> {
+    async fn create_user(&self, user: &User) -> Result<String> {
         if user.password.is_none() {
             bail!("password required");
         }
@@ -72,7 +74,7 @@ impl UserBackend for SqliteObjstorBackend {
         )
         .bind(&user.id)
         .bind(&user.username)
-        .bind(hash_with_salt(&password, "")?)
+        .bind(hash_with_salt(&password, &self.salt)?)
         .bind(user.created)
         .bind(user.is_locked)
         .bind(user.is_admin)
