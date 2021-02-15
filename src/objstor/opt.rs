@@ -25,6 +25,9 @@ pub struct Serve {
         env = "CONNECTION_STRING"
     )]
     pub connection_string: String,
+
+    #[clap(short, long, default_value = "CHANGEME-OBJSTOR", env = "SECRET")]
+    pub secret: String,
 }
 
 pub fn parse() -> AppOpt {
