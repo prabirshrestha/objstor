@@ -13,7 +13,8 @@ async-std = { version = "1.9.0", features = ["attributes"] }
 async-trait = "0.1.42"
 bcrypt = "0.9.0"
 chrono = "0.4.19"
+clap = "3.0.0-beta.1"
 dotenv = "0.15.0"
-sqlx = { version = "0.4.2", features = [ "runtime-async-std-native-tls", "chrono", "sqlite" ] }
+sqlx = { version = "0.5.1", features = [ "runtime-async-std-native-tls", "chrono", "sqlite" ] }
 tide = "0.16.0"
 uuid = { version = "0.8", features = ["serde", "v4"] }
