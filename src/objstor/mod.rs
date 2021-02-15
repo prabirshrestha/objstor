@@ -3,6 +3,7 @@ pub mod backend;
 mod config;
 mod hash;
 mod id;
+pub mod opt;
 mod user;
 
 pub use appstate::*;
