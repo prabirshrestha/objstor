@@ -2,6 +2,7 @@ pub mod sqlite;
 
 use anyhow::Result;
 use async_trait::async_trait;
+use async_vfs::Vfs;
 use chrono::{DateTime, Utc};
 
 pub struct User {
@@ -64,6 +65,7 @@ pub trait StorageBackend {
     async fn add_storage(&self) -> Result<String>;
     async fn get_storage(&self, id: &str) -> Result<Storage>;
     async fn remove_storage(&self, id: &str) -> Result<Storage>;
+    async fn get_vfs(&self, id: &str) -> Result<Box<dyn Vfs>>;
 }
 
 #[async_trait]

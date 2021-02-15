@@ -324,6 +324,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "async-vfs"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f6edbabbd3112494af7677f45cfad019008c7ec36d240290b182a456108819f2"
+dependencies = [
+ "async-std",
+ "async-trait",
+ "thiserror",
+]
+
+[[package]]
 name = "atoi"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1278,6 +1289,7 @@ dependencies = [
  "anyhow",
  "async-std",
  "async-trait",
+ "async-vfs",
  "bcrypt",
  "chrono",
  "clap",

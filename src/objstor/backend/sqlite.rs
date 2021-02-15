@@ -2,6 +2,7 @@ use super::{ObjstorBackend, StorageBackend, User, UserBackend};
 use crate::objstor::utils::{hash_with_salt, uuid};
 use anyhow::{bail, Result};
 use async_trait::async_trait;
+use async_vfs::Vfs;
 use chrono::Utc;
 use sqlx::SqlitePool;
 
@@ -153,6 +154,10 @@ impl StorageBackend for SqliteObjstorBackend {
     }
 
     async fn remove_storage(&self, _id: &str) -> Result<super::Storage> {
+        todo!()
+    }
+
+    async fn get_vfs(&self, id: &str) -> Result<Box<dyn Vfs>> {
         todo!()
     }
 }
