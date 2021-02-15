@@ -132,9 +132,9 @@ impl UserBackend for SqliteObjstorBackend {
 
     async fn change_password(
         &self,
-        username: &str,
-        current_password: &str,
-        new_password: &str,
+        _username: &str,
+        _current_password: &str,
+        _new_password: &str,
     ) -> Result<()> {
         todo!()
     }
