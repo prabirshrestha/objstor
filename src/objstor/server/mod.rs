@@ -1,13 +1,12 @@
 pub mod state;
 
-use std::{borrow::BorrowMut, sync::Arc};
-
 use self::state::State;
 use super::{
     backend::{sqlite::SqliteObjstorBackend, ObjstorBackend},
     opt::Serve,
 };
 use anyhow::Result;
+use std::sync::Arc;
 use tide::{prelude::*, Server};
 
 pub async fn serve(s: &Serve) -> Result<()> {
