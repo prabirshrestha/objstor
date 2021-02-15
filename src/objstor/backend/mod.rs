@@ -19,6 +19,7 @@ pub struct Storage {
     pub created: DateTime<Utc>,
     pub provider: String,
     pub data: String,
+    pub edata: String,
     pub is_locked: bool,
     pub is_index: bool,
 }
