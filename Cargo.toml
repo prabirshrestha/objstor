@@ -1,6 +1,6 @@
 [package]
 name = "objstor"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Prabir Shrestha <mail@prabir.me>"]
 description = "objstor"
 edition = "2018"
