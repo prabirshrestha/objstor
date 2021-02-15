@@ -1,4 +1,4 @@
-use super::{ObjstorBackend, User, UserBackend};
+use super::{ObjstorBackend, StorageBackend, User, UserBackend};
 use crate::objstor::utils::{hash_with_salt, uuid};
 use anyhow::{bail, Result};
 use async_trait::async_trait;
@@ -136,6 +136,21 @@ impl UserBackend for SqliteObjstorBackend {
         _current_password: &str,
         _new_password: &str,
     ) -> Result<()> {
+        todo!()
+    }
+}
+
+#[async_trait]
+impl StorageBackend for SqliteObjstorBackend {
+    async fn add_storage(&self) -> Result<String> {
+        todo!()
+    }
+
+    async fn get_storage(&self, _id: &str) -> Result<super::Storage> {
+        todo!()
+    }
+
+    async fn remove_storage(&self, _id: &str) -> Result<super::Storage> {
         todo!()
     }
 }

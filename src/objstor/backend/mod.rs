@@ -13,8 +13,12 @@ pub struct User {
     pub is_admin: bool,
 }
 
+pub struct Storage {
+    pub id: String,
+}
+
 #[async_trait]
-pub trait ObjstorBackend: UserBackend {
+pub trait ObjstorBackend: UserBackend + StorageBackend {
     async fn init(&self) -> Result<()>;
 }
 
@@ -28,4 +32,11 @@ pub trait UserBackend {
         current_password: &str,
         new_password: &str,
     ) -> Result<()>;
+}
+
+#[async_trait]
+pub trait StorageBackend {
+    async fn add_storage(&self) -> Result<String>;
+    async fn get_storage(&self, id: &str) -> Result<Storage>;
+    async fn remove_storage(&self, id: &str) -> Result<Storage>;
 }
