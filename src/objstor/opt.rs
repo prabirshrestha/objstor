@@ -1,7 +1,7 @@
 use clap::Clap;
 
 #[derive(Debug, Clap)]
-#[clap()]
+#[clap(version=env!("CARGO_PKG_VERSION"), author=env!("CARGO_PKG_AUTHORS"))]
 pub struct AppOpt {
     #[clap(subcommand)]
     pub command: Command,
