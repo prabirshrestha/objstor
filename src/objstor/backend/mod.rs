@@ -67,6 +67,3 @@ pub trait StorageBackend {
     async fn remove_storage(&self, id: &str) -> Result<Storage>;
     async fn get_vfs(&self, id: &str) -> Result<Box<dyn Vfs>>;
 }
-
-#[async_trait]
-pub trait ObjectBackend {}
