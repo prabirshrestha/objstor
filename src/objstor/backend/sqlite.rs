@@ -157,7 +157,7 @@ impl StorageBackend for SqliteObjstorBackend {
         todo!()
     }
 
-    async fn get_vfs(&self, id: &str) -> Result<Box<dyn Vfs>> {
+    async fn get_vfs(&self, _id: &str) -> Result<Box<dyn Vfs>> {
         todo!()
     }
 }
