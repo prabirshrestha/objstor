@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 pub mod sqlite;
 
 use anyhow::Result;
