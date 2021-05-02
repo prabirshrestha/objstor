@@ -12,7 +12,7 @@ use tide::{prelude::*, Server};
 pub async fn serve(s: &Serve) -> Result<()> {
     let app = get_app(&s).await?;
 
-    let mut listener = app.bind(format!("0.0.0.0:{}", s.port)).await?;
+    let mut listener = app.bind((&s.host, s.port)).await?;
     for info in listener.info().iter() {
         println!("Server listening on {}", info);
     }

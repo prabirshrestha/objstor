@@ -15,7 +15,10 @@ pub enum Command {
 #[derive(Debug, Clap)]
 pub struct Serve {
     #[clap(short, default_value = "3000", env = "PORT")]
-    pub port: u64,
+    pub port: u16,
+
+    #[clap(short, default_value = "0.0.0.0", env = "HOST")]
+    pub host: String,
 
     // NOTE: rwc -> read/write/create if not exist
     #[clap(
