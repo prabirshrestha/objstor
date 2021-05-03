@@ -34,6 +34,7 @@ impl WebdavMiddleware {
                 // if file: "OPTIONS, LOCK, GET, HEAD, POST, DELETE, PROPPATCH, COPY, MOVE, UNLOCK, PROPFIND, PUT",
             )
             .header("dav", "1")
+            .header("ms-author-dav", "dav")
             .build();
         Ok(res)
     }
