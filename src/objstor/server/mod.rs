@@ -8,9 +8,8 @@ use super::{
     opt::Serve,
 };
 use anyhow::Result;
-use std::str::FromStr;
 use std::sync::Arc;
-use tide::{http::Method, http::Mime, prelude::*, Response, Server, StatusCode};
+use tide::{prelude::*, Server, StatusCode};
 
 pub async fn serve(s: &Serve) -> Result<()> {
     tide::log::start();
