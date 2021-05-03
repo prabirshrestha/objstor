@@ -12,7 +12,7 @@ impl WebdavMiddleware {
 
 #[async_trait]
 impl<State: Clone + Send + Sync + 'static> Middleware<State> for WebdavMiddleware {
-    async fn handle(&self, mut req: Request<State>, next: Next<'_, State>) -> Result {
+    async fn handle(&self, req: Request<State>, next: Next<'_, State>) -> Result {
         match req.method() {
             Method::Options => self.handle_opts(req, next).await,
             _ => Ok(Response::new(StatusCode::BadRequest)),
@@ -23,7 +23,7 @@ impl<State: Clone + Send + Sync + 'static> Middleware<State> for WebdavMiddlewar
 impl WebdavMiddleware {
     async fn handle_opts<State: Clone + Send + Sync + 'static>(
         &self,
-        mut _req: Request<State>,
+        _req: Request<State>,
         _next: Next<'_, State>,
     ) -> Result {
         // curl -X OPTIONS http://127.0.0.1:3000/webdav -vv
@@ -33,6 +33,7 @@ impl WebdavMiddleware {
                 "OPTIONS, LOCK, DELETE, PROPPATCH, COPY, MOVE, UNLOCK, PROPFIND",
                 // if file: "OPTIONS, LOCK, GET, HEAD, POST, DELETE, PROPPATCH, COPY, MOVE, UNLOCK, PROPFIND, PUT",
             )
+            .header("dav", "1")
             .build();
         Ok(res)
     }
