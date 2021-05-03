@@ -1,15 +1,15 @@
 pub mod state;
 pub mod webdav;
 
-use self::state::State;
-use self::webdav::WebdavMiddleware;
 use super::{
     backend::{sqlite::SqliteObjstorBackend, ObjstorBackend},
     opt::Serve,
 };
 use anyhow::Result;
+use state::State;
 use std::sync::Arc;
 use tide::{prelude::*, Server, StatusCode};
+use webdav::WebdavMiddleware;
 
 pub async fn serve(s: &Serve) -> Result<()> {
     tide::log::start();
