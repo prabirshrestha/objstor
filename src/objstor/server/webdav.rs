@@ -23,8 +23,8 @@ impl<State: Clone + Send + Sync + 'static> Middleware<State> for WebdavMiddlewar
 impl WebdavMiddleware {
     async fn handle_opts<State: Clone + Send + Sync + 'static>(
         &self,
-        req: Request<State>,
-        next: Next<'_, State>,
+        mut _req: Request<State>,
+        _next: Next<'_, State>,
     ) -> Result {
         // curl -X OPTIONS http://127.0.0.1:3000/webdav -vv
         let res = Response::builder(StatusCode::Ok)
