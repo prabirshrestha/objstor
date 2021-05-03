@@ -30,7 +30,7 @@ async fn get_app(s: &Serve) -> Result<Server<State>> {
     let objstor_backend = SqliteObjstorBackend::new(&s.connection_string, s.salt.clone()).await?;
     objstor_backend.init().await?;
     let state = State::new(Arc::new(objstor_backend));
-    let mut app = tide::with_state(state.clone());
+    let mut app = tide::with_state(state);
     app.at("/webdav")
         .with(WebdavMiddleware::new())
         .all(|_| async { Ok(StatusCode::BadRequest) });
