@@ -26,6 +26,7 @@ impl WebdavMiddleware {
         req: Request<State>,
         next: Next<'_, State>,
     ) -> Result {
+        // curl -X OPTIONS http://127.0.0.1:3000/webdav -vv
         let res = Response::builder(StatusCode::Ok)
             .header(
                 "allow",
