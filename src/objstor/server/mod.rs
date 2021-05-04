@@ -6,6 +6,7 @@ use super::{
     opt::Serve,
 };
 use anyhow::Result;
+use async_std::path::Path;
 use async_vfs::backend::OsFs;
 use state::State;
 use std::sync::Arc;
@@ -33,7 +34,9 @@ async fn get_app(s: &Serve) -> Result<Server<State>> {
     let state = State::new(Arc::new(objstor_backend));
     let mut app = tide::with_state(state);
     app.at("/webdav")
-        .with(WebdavMiddleware::new(Box::new(OsFs::new("./"))))
+        .with(WebdavMiddleware::new(Box::new(OsFs::new(
+            Path::new(".").canonicalize().await?.to_str().unwrap(),
+        ))))
         .all(|_| async { Ok(StatusCode::BadRequest) });
     Ok(app)
 }
