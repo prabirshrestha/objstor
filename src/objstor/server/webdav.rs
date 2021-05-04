@@ -1,12 +1,17 @@
+use std::sync::Arc;
+
 use async_trait::async_trait;
+use async_vfs::Vfs;
 use tide::{http::Method, Middleware, Next, Request, Response, Result, StatusCode};
 
-#[derive(Debug, Clone)]
-pub struct WebdavMiddleware {}
+#[derive(Clone)]
+pub struct WebdavMiddleware {
+    vfs: Arc<Box<dyn Vfs + Send + Sync + 'static>>,
+}
 
 impl WebdavMiddleware {
-    pub fn new() -> Self {
-        Self {}
+    pub fn new(vfs: Box<dyn Vfs + Send + Sync + 'static>) -> Self {
+        Self { vfs: Arc::new(vfs) }
     }
 }
 
