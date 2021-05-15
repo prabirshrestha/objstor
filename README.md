@@ -15,6 +15,18 @@ yarn start
 yarn build
 ```
 
+# Help
+
+```bash
+objstor --help
+```
+
+# Running webserver
+
+```bash
+objstor serve
+```
+
 # LICENSE
 
 MIT
