@@ -2,14 +2,17 @@
 
 One stop for storing all your data.
 
-# Running objstor via cargo
+# Running objstor in watch mode
 
 ```bash
-cargo run -- serve
+yarn install
+yarn start
 ```
 
+# Building objstor for release
+
 ```bash
-cargo watch -x 'run -- serve'
+yarn build
 ```
 
 # LICENSE
