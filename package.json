@@ -6,7 +6,7 @@
         "client:start": "yarn --cwd client start",
         "client:build": "yarn --cwd client build",
         "client:test": "yarn --cwd client test",
-        "server:start": "cargo watch -x 'run'",
+        "server:start": "cargo watch -x 'run serve'",
         "server:build": "cargo build --release"
     },
     "devDependencies": {

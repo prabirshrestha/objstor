@@ -1,12 +1,16 @@
 mod config;
+mod server;
+mod state;
 
 use anyhow::Result;
+use config::Command;
 
 #[async_std::main]
 async fn main() -> Result<()> {
-    let _config = config::parse();
-    let mut app = tide::new();
-    app.at("/").get(|_| async { Ok("Hello from objstor!") });
-    app.listen("0.0.0.0:5000").await?;
+    dotenv::dotenv().ok();
+    let config = config::parse();
+    match &config.command {
+        Command::Serve(s) => server::serve(&s).await?,
+    }
     Ok(())
 }
