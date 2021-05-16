@@ -1,10 +1,6 @@
 use async_trait::async_trait;
-use futures_core::future::BoxFuture;
 use objstor::{ObjstorError, ObjstorProvider};
-use sqlx::{
-    migrate::{Migration, MigrationSource, Migrator},
-    SqlitePool,
-};
+use sqlx::SqlitePool;
 
 #[derive(Clone, Debug)]
 pub struct SqliteObjstorProvider {
@@ -28,22 +24,10 @@ impl SqliteObjstorProvider {
 #[async_trait]
 impl ObjstorProvider for SqliteObjstorProvider {
     async fn init(&self) -> Result<(), ObjstorError> {
-        let migrator = Migrator::new(self)
-            .await
-            .map_err(|e| ObjstorError::Unknown(e.to_string()))?;
-        migrator
+        sqlx::migrate!("./migrations")
             .run(&self.pool)
             .await
-            .map_err(|e| ObjstorError::Unknown(e.to_string()))?;
+            .map_err(|e| ObjstorError::ProviderMigrationError(e.to_string()))?;
         Ok(())
-    }
-}
-
-impl<'s> MigrationSource<'s> for &'s SqliteObjstorProvider {
-    fn resolve(self) -> BoxFuture<'s, Result<Vec<Migration>, sqlx::error::BoxDynError>> {
-        Box::pin(async move {
-            let migrations = vec![];
-            Ok(migrations)
-        })
     }
 }
