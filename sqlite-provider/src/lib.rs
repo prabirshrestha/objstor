@@ -31,7 +31,10 @@ impl ObjstorProvider for SqliteObjstorProvider {
         let migrator = Migrator::new(self)
             .await
             .map_err(|e| ObjstorError::Unknown(e.to_string()))?;
-        migrator.run(&self.pool).await.unwrap();
+        migrator
+            .run(&self.pool)
+            .await
+            .map_err(|e| ObjstorError::Unknown(e.to_string()))?;
         Ok(())
     }
 }
