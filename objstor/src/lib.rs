@@ -27,3 +27,7 @@ pub trait ObjstorProvider: UserObjstorProvider + Send + Sync + 'static {
 pub trait UserObjstorProvider {
     async fn has_users(&self) -> Result<bool, ObjstorError>;
 }
+
+pub fn uuid() -> String {
+    uuid::Uuid::new_v4().to_string()
+}
