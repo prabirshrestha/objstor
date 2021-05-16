@@ -1,0 +1,16 @@
+{
+    "scripts": {
+        "preinstall": "yarn --cwd client install",
+        "build": "yarn client:build && yarn server:build",
+        "start": "cross-env BROWSER=none concurrently \"yarn client:start\" \"yarn server:start\"",
+        "client:start": "yarn --cwd client start",
+        "client:build": "yarn --cwd client build",
+        "client:test": "yarn --cwd client test",
+        "server:start": "cargo watch -x 'run serve'",
+        "server:build": "cargo build --release"
+    },
+    "devDependencies": {
+        "concurrently": "^6.1.0",
+        "cross-env": "^7.0.3"
+    }
+}

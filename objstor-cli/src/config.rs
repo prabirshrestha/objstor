@@ -2,7 +2,7 @@ use clap::Clap;
 
 #[derive(Debug, Clap)]
 #[clap(version=env!("CARGO_PKG_VERSION"), author=env!("CARGO_PKG_AUTHORS"))]
-pub struct AppOpt {
+pub struct Config {
     #[clap(subcommand)]
     pub command: Command,
 }
@@ -14,7 +14,7 @@ pub enum Command {
 
 #[derive(Debug, Clap)]
 pub struct Serve {
-    #[clap(short, default_value = "3000", env = "PORT")]
+    #[clap(short, default_value = "5000", env = "PORT")]
     pub port: u16,
 
     #[clap(short, default_value = "0.0.0.0", env = "HOST")]
@@ -33,6 +33,6 @@ pub struct Serve {
     pub salt: String,
 }
 
-pub fn parse() -> AppOpt {
-    AppOpt::parse()
+pub fn parse() -> Config {
+    Config::parse()
 }
