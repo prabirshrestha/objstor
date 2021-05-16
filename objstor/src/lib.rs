@@ -19,6 +19,11 @@ pub struct Object {
 }
 
 #[async_trait]
-pub trait ObjstorProvider: Send + Sync + 'static {
+pub trait ObjstorProvider: UserObjstorProvider + Send + Sync + 'static {
     async fn init(&self) -> Result<(), ObjstorError>;
+}
+
+#[async_trait]
+pub trait UserObjstorProvider {
+    async fn has_users(&self) -> Result<bool, ObjstorError>;
 }
