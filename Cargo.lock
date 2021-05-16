@@ -1281,6 +1281,7 @@ dependencies = [
  "objstor",
  "sqlite-provider",
  "tide",
+ "webdav",
 ]
 
 [[package]]
@@ -2333,6 +2334,13 @@ checksum = "e828417b379f3df7111d3a2a9e5753706cae29c41f7c4029ee9fd77f3e09e582"
 dependencies = [
  "js-sys",
  "wasm-bindgen",
+]
+
+[[package]]
+name = "webdav"
+version = "0.1.0"
+dependencies = [
+ "tide",
 ]
 
 [[package]]
