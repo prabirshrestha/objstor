@@ -5,6 +5,9 @@ pub enum ObjstorError {
     #[error("connection error")]
     ConnectionError(String),
 
+    #[error("hash error")]
+    HashError(String),
+
     #[error("provider migration error")]
     ProviderMigrationError(String),
 

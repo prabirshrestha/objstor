@@ -31,3 +31,9 @@ pub trait UserObjstorProvider {
 pub fn uuid() -> String {
     uuid::Uuid::new_v4().to_string()
 }
+
+pub fn hash_with_salt(contents: &str, salt: &str) -> Result<String, ObjstorError> {
+    Ok(bcrypt::hash_with_salt(contents, 12, salt.as_bytes())
+        .map_err(|e| ObjstorError::HashError(e.to_string()))?
+        .to_string())
+}
