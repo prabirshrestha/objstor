@@ -6,5 +6,5 @@ pub enum ObjstorError {
     ConnectionError(String),
 
     #[error("unknown error")]
-    Unknown,
+    Unknown(String),
 }
