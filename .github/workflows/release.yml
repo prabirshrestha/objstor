@@ -69,7 +69,7 @@ jobs:
       RUST_BACKTRACE: 1
     strategy:
       matrix:
-        build: [linux, linux-arm, macos, win-msvc]
+        build: [linux, linux-arm, win-msvc] # todo: add back macos
         include:
           - build: linux
             os: ubuntu-latest

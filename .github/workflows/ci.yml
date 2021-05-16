@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build: [linux]
+        build: [linux, linux-arm, winmsvc] # todo: add back macos
         include:
           - build: linux
             os: ubuntu-latest
