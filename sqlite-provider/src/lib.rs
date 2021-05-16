@@ -1,5 +1,5 @@
 use async_trait::async_trait;
-use objstor::{ObjstorError, ObjstorProvider, UserObjstorProvider};
+use objstor::{uuid, ObjstorError, ObjstorProvider, User, UserObjstorProvider};
 use sqlx::SqlitePool;
 
 #[derive(Clone, Debug)]
@@ -31,6 +31,14 @@ impl ObjstorProvider for SqliteObjstorProvider {
 
         if !self.has_users().await? {
             // create users
+            self.create_user(&User {
+                id: uuid(),
+                username: String::from("admin"),
+                password: Some(String::from("admin")),
+                is_locked: false,
+                is_admin: true,
+            })
+            .await?;
         }
 
         Ok(())
@@ -44,6 +52,35 @@ impl UserObjstorProvider for SqliteObjstorProvider {
             .fetch_one(&self.pool)
             .await
             .map_err(|e| ObjstorError::ConnectionError(e.to_string()))?;
-        Ok(user_count == 0)
+        Ok(user_count != 0)
+    }
+
+    async fn create_user(&self, user: &User) -> Result<String, ObjstorError> {
+        if user.id == "" {
+            return Err(ObjstorError::InvalidUserId(user.id.clone()));
+        }
+
+        if user.password.is_none() {
+            return Err(ObjstorError::EmptyPassword());
+        }
+
+        sqlx::query(
+            r#"
+                INSERT INTO user
+                    (id, username, password, is_admin, is_locked)
+                    VALUES
+                    (?, ?, ?, ?, ?);
+            "#,
+        )
+        .bind(&user.id)
+        .bind(&user.username)
+        .bind(&user.password.clone().unwrap())
+        .bind(&user.is_admin)
+        .bind(&user.is_locked)
+        .execute(&self.pool)
+        .await
+        .map_err(|e| ObjstorError::ConnectionError(e.to_string()))?;
+
+        Ok(user.id.clone())
     }
 }

@@ -5,8 +5,14 @@ pub enum ObjstorError {
     #[error("connection error")]
     ConnectionError(String),
 
+    #[error("empty password")]
+    EmptyPassword(),
+
     #[error("hash error")]
     HashError(String),
+
+    #[error("invalid user id")]
+    InvalidUserId(String),
 
     #[error("provider migration error")]
     ProviderMigrationError(String),

@@ -5,7 +5,7 @@ pub use error::ObjstorError;
 pub struct User {
     pub id: String,
     pub username: String,
-    pub password: String,
+    pub password: Option<String>,
     pub is_locked: bool,
     pub is_admin: bool,
 }
@@ -26,6 +26,7 @@ pub trait ObjstorProvider: UserObjstorProvider + Send + Sync + 'static {
 #[async_trait]
 pub trait UserObjstorProvider {
     async fn has_users(&self) -> Result<bool, ObjstorError>;
+    async fn create_user(&self, user: &User) -> Result<String, ObjstorError>;
 }
 
 pub fn uuid() -> String {
