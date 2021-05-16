@@ -1,22 +1,27 @@
 use async_trait::async_trait;
-use objstor::{uuid, ObjstorError, ObjstorProvider, User, UserObjstorProvider};
+use objstor::{hash_with_salt, uuid, ObjstorError, ObjstorProvider, User, UserObjstorProvider};
 use sqlx::SqlitePool;
 
 #[derive(Clone, Debug)]
 pub struct SqliteObjstorProvider {
     pool: SqlitePool,
+    salt: String,
 }
 
 impl SqliteObjstorProvider {
-    pub fn new(pool: SqlitePool) -> Self {
-        Self { pool }
+    pub fn new(pool: SqlitePool, salt: &str) -> Self {
+        Self {
+            pool,
+            salt: salt.to_owned(),
+        }
     }
 
-    pub async fn connect(connection_string: &str) -> Result<Self, ObjstorError> {
+    pub async fn connect(connection_string: &str, salt: &str) -> Result<Self, ObjstorError> {
         Ok(Self::new(
             SqlitePool::connect(connection_string)
                 .await
                 .map_err(|e| ObjstorError::ConnectionError(e.to_string()))?,
+            salt,
         ))
     }
 }
@@ -82,5 +87,17 @@ impl UserObjstorProvider for SqliteObjstorProvider {
         .map_err(|e| ObjstorError::ConnectionError(e.to_string()))?;
 
         Ok(user.id.clone())
+    }
+
+    async fn validate_user(&self, username: &str, password: &str) -> Result<bool, ObjstorError> {
+        let count: i32 = sqlx::query_scalar(
+            "SELECT count(*) FROM user WHERE locked=0 and username=? and password=?",
+        )
+        .bind(username)
+        .bind(hash_with_salt(password, &self.salt)?)
+        .fetch_one(&self.pool)
+        .await
+        .map_err(|e| ObjstorError::ConnectionError(e.to_string()))?;
+        Ok(count == 1)
     }
 }

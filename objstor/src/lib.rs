@@ -27,6 +27,7 @@ pub trait ObjstorProvider: UserObjstorProvider + Send + Sync + 'static {
 pub trait UserObjstorProvider {
     async fn has_users(&self) -> Result<bool, ObjstorError>;
     async fn create_user(&self, user: &User) -> Result<String, ObjstorError>;
+    async fn validate_user(&self, username: &str, password: &str) -> Result<bool, ObjstorError>;
 }
 
 pub fn uuid() -> String {

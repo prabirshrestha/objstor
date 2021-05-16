@@ -30,6 +30,6 @@ async fn get_app(s: &Serve) -> Result<Server<State>> {
 }
 
 async fn get_state(s: &Serve) -> Result<State> {
-    let provider = SqliteObjstorProvider::connect(&s.connection_string).await?;
+    let provider = SqliteObjstorProvider::connect(&s.connection_string, &s.salt).await?;
     Ok(State::new(Box::new(provider)))
 }
