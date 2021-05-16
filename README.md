@@ -22,7 +22,7 @@ yarn build
 objstor --help
 ```
 
-# Running webserver
+# Running objstor server
 
 ```bash
 objstor serve
