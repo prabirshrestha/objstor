@@ -12,6 +12,7 @@ yarn start
 # Building objstor for release
 
 ```bash
+yarn install
 yarn build
 ```
 
