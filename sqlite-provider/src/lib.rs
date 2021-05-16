@@ -1,5 +1,5 @@
 use async_trait::async_trait;
-use objstor::{hash_with_salt, uuid, ObjstorError, ObjstorProvider, User, UserObjstorProvider};
+use objstor::{hash_with_salt, new_id, ObjstorError, ObjstorProvider, User, UserObjstorProvider};
 use sqlx::SqlitePool;
 
 #[derive(Clone, Debug)]
@@ -36,7 +36,7 @@ impl ObjstorProvider for SqliteObjstorProvider {
 
         if !self.has_users().await? {
             self.create_user(&User {
-                id: uuid(),
+                id: new_id(),
                 username: String::from("admin"),
                 password: Some(String::from("admin")),
                 is_locked: false,
