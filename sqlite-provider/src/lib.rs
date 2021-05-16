@@ -1,16 +1,23 @@
 use async_trait::async_trait;
 use objstor::{ObjstorError, ObjstorProvider};
+use sqlx::SqlitePool;
 
 #[derive(Clone, Debug)]
 pub struct SqliteObjstorProvider {
-    connection_string: String,
+    pool: SqlitePool,
 }
 
 impl SqliteObjstorProvider {
-    pub fn new(connection: &str) -> Self {
-        Self {
-            connection_string: connection.to_owned(),
-        }
+    pub fn new(pool: SqlitePool) -> Self {
+        Self { pool }
+    }
+
+    pub async fn connect(connection_string: &str) -> Result<Self, ObjstorError> {
+        Ok(Self::new(
+            SqlitePool::connect(connection_string)
+                .await
+                .map_err(|e| ObjstorError::ConnectionError(e.to_string()))?,
+        ))
     }
 }
 
