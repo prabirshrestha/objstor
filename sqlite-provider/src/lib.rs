@@ -60,7 +60,7 @@ impl UserObjstorProvider for SqliteObjstorProvider {
     }
 
     async fn create_user(&self, user: &User) -> Result<String, ObjstorError> {
-        if user.id == "" {
+        if user.id.is_empty() {
             return Err(ObjstorError::InvalidUserId(user.id.clone()));
         }
 
