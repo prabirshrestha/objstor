@@ -35,7 +35,6 @@ impl ObjstorProvider for SqliteObjstorProvider {
             .map_err(|e| ObjstorError::ProviderMigrationError(e.to_string()))?;
 
         if !self.has_users().await? {
-            // create users
             self.create_user(&User {
                 id: uuid(),
                 username: String::from("admin"),
