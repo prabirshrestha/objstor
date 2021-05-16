@@ -1032,6 +1032,7 @@ dependencies = [
  "clap",
  "dotenv",
  "objstor",
+ "sqlite-provider",
  "tide",
 ]
 
@@ -1420,6 +1421,14 @@ checksum = "9e3dfc207c526015c632472a77be09cf1b6e46866581aecae5cc38fb4235dea2"
 dependencies = [
  "libc",
  "winapi",
+]
+
+[[package]]
+name = "sqlite-provider"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "objstor",
 ]
 
 [[package]]

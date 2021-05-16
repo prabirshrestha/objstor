@@ -6,6 +6,8 @@ pub struct User {
     pub id: String,
     pub username: String,
     pub password: String,
+    pub is_locked: bool,
+    pub is_admin: bool,
 }
 
 pub struct Storage {
@@ -17,12 +19,6 @@ pub struct Object {
 }
 
 #[async_trait]
-pub trait ObjstorBackend: UserBackend + StorageBackend {
+pub trait ObjstorProvider: Send + Sync + 'static {
     async fn init(&self) -> Result<(), ObjstorError>;
 }
-
-#[async_trait]
-pub trait UserBackend {}
-
-#[async_trait]
-pub trait StorageBackend {}

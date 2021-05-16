@@ -1,9 +1,15 @@
 use crate::{config::Serve, state::State};
 use anyhow::Result;
+use sqlite_provider::SqliteObjstorProvider;
 use tide::{prelude::*, Server};
 
 pub async fn serve(s: &Serve) -> Result<()> {
     let app = get_app(&s).await?;
+
+    println!("Initializing server...");
+    let state = app.state();
+    state.provider.init().await?;
+    println!("Initializing server complete...");
 
     let mut listener = app.bind((&s.host, s.port)).await?;
     for info in listener.info().iter() {
@@ -23,6 +29,7 @@ async fn get_app(s: &Serve) -> Result<Server<State>> {
     Ok(app)
 }
 
-async fn get_state(_s: &Serve) -> Result<State> {
-    Ok(State {})
+async fn get_state(s: &Serve) -> Result<State> {
+    let provider = SqliteObjstorProvider::new(&s.connection_string);
+    Ok(State::new(Box::new(provider)))
 }
