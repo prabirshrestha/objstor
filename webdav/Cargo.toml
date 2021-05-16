@@ -1,0 +1,8 @@
+[package]
+name = "webdav"
+version = "0.1.0"
+authors = ["Prabir Shrestha <mail@prabir.me>"]
+edition = "2018"
+
+[dependencies]
+tide = { version = "0.16.0" }

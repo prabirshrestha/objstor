@@ -2,5 +2,6 @@
 members = [
     "objstor",
     "objstor-cli",
-    "sqlite-provider"
+    "sqlite-provider",
+    "webdav"
 ]
