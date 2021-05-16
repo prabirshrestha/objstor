@@ -4,7 +4,13 @@ pub struct WebdavHandler {}
 
 impl WebdavHandler {
     pub fn new() -> Self {
-        WebdavHandler {}
+        Self {}
+    }
+}
+
+impl Default for WebdavHandler {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
