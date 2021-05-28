@@ -92,6 +92,7 @@ async fn handle_all(req: Request<State>) -> tide::Result {
 #[cfg(not(debug_assertions))]
 async fn handle_all(req: Request<State>) -> tide::Result {
     use std::str::FromStr;
+    use tide::{http::Mime, Body, StatusCode};
 
     let path = &req.url().path();
     let res = match ClientAssets::get(path) {
@@ -100,8 +101,8 @@ async fn handle_all(req: Request<State>) -> tide::Result {
                 std::borrow::Cow::Borrowed(bytes) => bytes.into(),
                 std::borrow::Cow::Owned(bytes) => bytes.into(),
             };
-            Response::builder(tide::StatusCode::Ok)
-                .content_type(tide::http::Mime::from_str(
+            Response::builder(StatusCode::Ok)
+                .content_type(Mime::from_str(
                     mime_guess::from_path(&path)
                         .first_or_octet_stream()
                         .as_ref(),
@@ -111,8 +112,8 @@ async fn handle_all(req: Request<State>) -> tide::Result {
         }
         _ => {
             let index_html = ClientAssets::get("/index.html").unwrap();
-            Response::builder(tide::StatusCode::Ok)
-                .content_type(tide::http::Mime::from_str(
+            Response::builder(StatusCode::Ok)
+                .content_type(Mime::from_str(
                     mime_guess::from_path("/index.html")
                         .first_or_octet_stream()
                         .as_ref(),
