@@ -79,12 +79,9 @@ async fn handle_all(req: Request<State>) -> tide::Result {
     }
     let mut proxy_res = req_builder.send().await?;
     let mut res = Response::new(proxy_res.status());
-    proxy_res
-        .iter()
-        .filter(|(n, _)| *n != "content-encoding")
-        .for_each(|(n, v)| {
-            res.append_header(n, v);
-        });
+    proxy_res.iter().for_each(|(n, v)| {
+        res.append_header(n, v);
+    });
     if let Some(mime) = proxy_res.content_type() {
         res.set_content_type(mime);
     }
