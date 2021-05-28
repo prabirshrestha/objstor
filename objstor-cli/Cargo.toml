@@ -15,6 +15,6 @@ mime_guess = "2.0.3"
 objstor = { path = "../objstor" }
 rust-embed = "5.9.0"
 sqlite-provider = { path = "../sqlite-provider" }
-surf = { version = "2.2.0", features = [ "h1-client-rustls" ] }
+surf = { version = "2.2.0", default-features = false, features = [ "h1-client-rustls", "middleware-logger", "encoding" ] }
 tide = { version = "0.16.0" }
 webdav = { path = "../webdav" }
