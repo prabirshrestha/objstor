@@ -1,11 +1,8 @@
-use std::borrow::Cow;
-
 use crate::{config::Serve, state::State};
 use anyhow::Result;
 use rust_embed::RustEmbed;
 use sqlite_provider::SqliteObjstorProvider;
-use std::str::FromStr;
-use tide::{http::Mime, prelude::*, Body, Request, Response, Server, StatusCode};
+use tide::{prelude::*, Request, Response, Server};
 use webdav::WebdavHandler;
 
 #[cfg(debug_assertions)]
@@ -97,12 +94,15 @@ async fn handle_all(req: Request<State>) -> tide::Result {
 
 #[cfg(not(debug_assertions))]
 async fn handle_all(req: Request<State>) -> tide::Result {
+    use std::str::FromStr;
+    use tide::StatusCode;
+
     let path = &req.url().path();
     let res = match ClientAssets::get(path) {
         Some(content) => {
             let body: Body = match content {
-                Cow::Borrowed(bytes) => bytes.into(),
-                Cow::Owned(bytes) => bytes.into(),
+                std::borrow::Cow::Borrowed(bytes) => bytes.into(),
+                std::borrow::Cow::Owned(bytes) => bytes.into(),
             };
             Response::builder(StatusCode::Ok)
                 .content_type(Mime::from_str(
