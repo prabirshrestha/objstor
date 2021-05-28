@@ -1,11 +1,11 @@
 use std::borrow::Cow;
 
-use anyhow::Result;
 use crate::{config::Serve, state::State};
+use anyhow::Result;
 use rust_embed::RustEmbed;
 use sqlite_provider::SqliteObjstorProvider;
 use std::str::FromStr;
-use tide::{Body, Request, Response, Server, StatusCode, http::Mime, prelude::*};
+use tide::{http::Mime, prelude::*, Body, Request, Response, Server, StatusCode};
 use webdav::WebdavHandler;
 
 #[cfg(debug_assertions)]
@@ -82,9 +82,12 @@ async fn handle_all(req: Request<State>) -> tide::Result {
     }
     let mut proxy_res = req_builder.send().await?;
     let mut res = Response::new(proxy_res.status());
-    proxy_res.iter().filter(|(n, _)| *n != "content-encoding").for_each(|(n, v)| {
-        res.append_header(n, v);
-    });
+    proxy_res
+        .iter()
+        .filter(|(n, _)| *n != "content-encoding")
+        .for_each(|(n, v)| {
+            res.append_header(n, v);
+        });
     if let Some(mime) = proxy_res.content_type() {
         res.set_content_type(mime);
     }
@@ -99,17 +102,25 @@ async fn handle_all(req: Request<State>) -> tide::Result {
         Some(content) => {
             let body: Body = match content {
                 Cow::Borrowed(bytes) => bytes.into(),
-                Cow::Owned(bytes) => bytes.into()
+                Cow::Owned(bytes) => bytes.into(),
             };
             Response::builder(StatusCode::Ok)
-                .content_type(Mime::from_str(mime_guess::from_path(&path).first_or_octet_stream().as_ref())?)
+                .content_type(Mime::from_str(
+                    mime_guess::from_path(&path)
+                        .first_or_octet_stream()
+                        .as_ref(),
+                )?)
                 .body(body)
                 .build()
-        },
+        }
         _ => {
             let index_html = ClientAssets::get("/index.html").unwrap();
             Response::builder(StatusCode::Ok)
-                .content_type(Mime::from_str(mime_guess::from_path("/index.html").first_or_octet_stream().as_ref())?)
+                .content_type(Mime::from_str(
+                    mime_guess::from_path("/index.html")
+                        .first_or_octet_stream()
+                        .as_ref(),
+                )?)
                 .body(Body::from(std::str::from_utf8(&index_html)?))
                 .build()
         }
