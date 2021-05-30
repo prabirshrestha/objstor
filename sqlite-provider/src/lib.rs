@@ -1,6 +1,6 @@
 use async_trait::async_trait;
 use objstor::{hash_with_salt, new_id, ObjstorError, ObjstorProvider, User, UserObjstorProvider};
-use sqlx::{sqlite::SqliteRow, Row, SqlitePool};
+use sqlx::{Row, SqlitePool};
 
 #[derive(Clone, Debug)]
 pub struct SqliteObjstorProvider {
@@ -103,7 +103,7 @@ impl UserObjstorProvider for SqliteObjstorProvider {
     async fn get_user_by_username(&self, username: &str) -> Result<Option<User>, ObjstorError> {
         let user: Option<User> = sqlx::query("SELECT * from user where username=?")
             .bind(username)
-            .map(|row: SqliteRow| User {
+            .map(|row| User {
                 username: row.get("username"),
                 id: row.get("id"),
                 password: None,
