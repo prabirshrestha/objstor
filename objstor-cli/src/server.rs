@@ -18,12 +18,12 @@ struct ClientAssets;
 struct ClientAssets;
 
 pub async fn serve(s: &Serve) -> Result<()> {
-    let app = get_app(&s).await?;
+    tide::log::start();
 
-    println!("Initializing server...");
+    let app = server(&s).await?;
+
     let state = app.state();
     state.provider.init().await?;
-    println!("Initializing server complete...");
 
     let mut listener = app.bind((&s.host, s.port)).await?;
     for info in listener.info().iter() {
@@ -35,13 +35,15 @@ pub async fn serve(s: &Serve) -> Result<()> {
     Ok(())
 }
 
-async fn get_app(s: &Serve) -> Result<Server<State>> {
-    // tide::log::start();
+async fn server(s: &Serve) -> Result<Server<State>> {
     let mut app = tide::with_state(get_state(&s).await?);
     let state = app.state().clone();
 
     app.at("/api").nest({
         let mut app = tide::with_state(state);
+        app.with(tide_http_auth::Authentication::new(
+            tide_http_auth::BasicAuthScheme::default(),
+        ));
         app.at("/users").post(api::user::create_user);
         app
     });
