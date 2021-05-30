@@ -1,4 +1,4 @@
-use crate::{config::Serve, state::State};
+use crate::{api, config::Serve, state::State};
 use anyhow::Result;
 use rust_embed::RustEmbed;
 use sqlite_provider::SqliteObjstorProvider;
@@ -37,8 +37,14 @@ pub async fn serve(s: &Serve) -> Result<()> {
 
 async fn get_app(s: &Serve) -> Result<Server<State>> {
     // tide::log::start();
-    let state = get_state(&s).await?;
-    let mut app = tide::with_state(state);
+    let mut app = tide::with_state(get_state(&s).await?);
+    let state = app.state().clone();
+
+    app.at("/api").nest({
+        let mut app = tide::with_state(state);
+        app.at("/users").post(api::user::create_user);
+        app
+    });
 
     // NOTE: due to bug in tide make sure to register multiple webdav routes.
     // https://github.com/http-rs/tide/issues/205
@@ -64,7 +70,13 @@ async fn handle_webdav(req: Request<State>) -> tide::Result {
 
 #[cfg(debug_assertions)]
 async fn handle_all(req: Request<State>) -> tide::Result {
+    use tide::{http::Method, StatusCode};
+
     let url = "http://localhost:3000";
+
+    if req.method() != Method::Get {
+        return Ok(Response::builder(StatusCode::NotFound).build());
+    }
 
     let path = if req.url().path() == "/" {
         "/index.html"
@@ -92,7 +104,14 @@ async fn handle_all(req: Request<State>) -> tide::Result {
 #[cfg(not(debug_assertions))]
 async fn handle_all(req: Request<State>) -> tide::Result {
     use std::str::FromStr;
-    use tide::{http::Mime, Body, StatusCode};
+    use tide::{
+        http::{Method, Mime},
+        Body, StatusCode,
+    };
+
+    if req.method() != Method::Get {
+        return Ok(Response::builder(StatusCode::NotFound).build());
+    }
 
     let path = &req.url().path();
     let res = match ClientAssets::get(path) {
