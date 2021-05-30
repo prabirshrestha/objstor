@@ -26,7 +26,7 @@ pub trait ObjstorProvider: UserObjstorProvider + Send + Sync + 'static {
 #[async_trait]
 pub trait UserObjstorProvider {
     async fn has_users(&self) -> Result<bool, ObjstorError>;
-    async fn create_user(&self, user: &User) -> Result<String, ObjstorError>;
+    async fn register_user(&self, user: &User) -> Result<String, ObjstorError>;
     async fn validate_user(&self, username: &str, password: &str) -> Result<bool, ObjstorError>;
     async fn get_user_by_username(&self, username: &str) -> Result<Option<User>, ObjstorError>;
 }

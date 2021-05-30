@@ -1,6 +1,6 @@
 use async_trait::async_trait;
 use objstor::{hash_with_salt, new_id, ObjstorError, ObjstorProvider, User, UserObjstorProvider};
-use sqlx::{Row, SqlitePool};
+use sqlx::{sqlite::SqliteRow, Row, SqlitePool};
 
 #[derive(Clone, Debug)]
 pub struct SqliteObjstorProvider {
@@ -35,7 +35,7 @@ impl ObjstorProvider for SqliteObjstorProvider {
             .map_err(|e| ObjstorError::ProviderMigrationError(e.to_string()))?;
 
         if !self.has_users().await? {
-            self.create_user(&User {
+            self.register_user(&User {
                 id: new_id(),
                 username: String::from("admin"),
                 password: Some(String::from("admin")),
@@ -59,7 +59,7 @@ impl UserObjstorProvider for SqliteObjstorProvider {
         Ok(user_count != 0)
     }
 
-    async fn create_user(&self, user: &User) -> Result<String, ObjstorError> {
+    async fn register_user(&self, user: &User) -> Result<String, ObjstorError> {
         if user.id.is_empty() {
             return Err(ObjstorError::InvalidUserId(user.id.clone()));
         }
@@ -103,16 +103,20 @@ impl UserObjstorProvider for SqliteObjstorProvider {
     async fn get_user_by_username(&self, username: &str) -> Result<Option<User>, ObjstorError> {
         let user: Option<User> = sqlx::query("SELECT * from user where username=?")
             .bind(username)
-            .map(|row| User {
-                username: row.get("username"),
-                id: row.get("id"),
-                password: None,
-                is_locked: row.get("is_locked"),
-                is_admin: row.get("is_admin"),
-            })
+            .map(|row| row_to_user(row))
             .fetch_optional(&self.pool)
             .await
             .map_err(|e| ObjstorError::ConnectionError(e.to_string()))?;
         Ok(user)
+    }
+}
+
+fn row_to_user(row: SqliteRow) -> User {
+    User {
+        username: row.get("username"),
+        id: row.get("id"),
+        password: None,
+        is_locked: row.get("is_locked"),
+        is_admin: row.get("is_admin"),
     }
 }
