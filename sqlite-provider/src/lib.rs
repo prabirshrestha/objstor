@@ -1,6 +1,6 @@
 use async_trait::async_trait;
 use objstor::{hash_with_salt, new_id, ObjstorError, ObjstorProvider, User, UserObjstorProvider};
-use sqlx::SqlitePool;
+use sqlx::{Row, SqlitePool};
 
 #[derive(Clone, Debug)]
 pub struct SqliteObjstorProvider {
@@ -78,7 +78,7 @@ impl UserObjstorProvider for SqliteObjstorProvider {
         )
         .bind(&user.id)
         .bind(&user.username)
-        .bind(&user.password.clone().unwrap())
+        .bind(hash_with_salt(&user.password.clone().unwrap(), &self.salt)?)
         .bind(&user.is_admin)
         .bind(&user.is_locked)
         .execute(&self.pool)
@@ -90,7 +90,7 @@ impl UserObjstorProvider for SqliteObjstorProvider {
 
     async fn validate_user(&self, username: &str, password: &str) -> Result<bool, ObjstorError> {
         let count: i32 = sqlx::query_scalar(
-            "SELECT count(*) FROM user WHERE locked=0 and username=? and password=?",
+            "SELECT count(*) FROM user WHERE is_locked=0 and username=? and password=?",
         )
         .bind(username)
         .bind(hash_with_salt(password, &self.salt)?)
@@ -98,5 +98,21 @@ impl UserObjstorProvider for SqliteObjstorProvider {
         .await
         .map_err(|e| ObjstorError::ConnectionError(e.to_string()))?;
         Ok(count == 1)
+    }
+
+    async fn get_user_by_username(&self, username: &str) -> Result<Option<User>, ObjstorError> {
+        let user: Option<User> = sqlx::query("SELECT * from user where username=?")
+            .bind(username)
+            .map(|row| User {
+                username: row.get("username"),
+                id: row.get("id"),
+                password: None,
+                is_locked: row.get("is_locked"),
+                is_admin: row.get("is_admin"),
+            })
+            .fetch_optional(&self.pool)
+            .await
+            .map_err(|e| ObjstorError::ConnectionError(e.to_string()))?;
+        Ok(user)
     }
 }

@@ -1,10 +1,8 @@
-mod api;
-mod config;
-mod server;
-mod state;
-
 use anyhow::Result;
-use config::Command;
+use objstor_cli::{
+    config::{self, Command},
+    server,
+};
 
 #[async_std::main]
 async fn main() -> Result<()> {
