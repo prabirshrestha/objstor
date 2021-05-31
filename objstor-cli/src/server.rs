@@ -18,7 +18,7 @@ struct ClientAssets;
 struct ClientAssets;
 
 pub async fn serve(s: &Serve) -> Result<()> {
-    tide::log::start();
+    // tide::log::start();
 
     let app = server(&s).await?;
 
@@ -38,6 +38,8 @@ pub async fn serve(s: &Serve) -> Result<()> {
 async fn server(s: &Serve) -> Result<Server<State>> {
     let mut app = tide::with_state(get_state(&s).await?);
     let state = app.state().clone();
+
+    app.with(driftwood::ApacheCombinedLogger);
 
     app.at("/api").nest({
         let mut app = tide::with_state(state);
