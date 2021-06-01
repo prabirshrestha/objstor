@@ -1,6 +1,7 @@
 import { Heading, FormControl, FormLabel, Input, Button } from '@chakra-ui/react';
 import * as React from 'react';
 import { Link } from '../Components/Link';
+import { homePageRoute } from '../routes';
 
 const ChangePasswordPage = () => {
   const [username, setUsername] = React.useState('');
@@ -15,7 +16,7 @@ const ChangePasswordPage = () => {
 
   return (
     <>
-      <Link to="/">Objstor</Link>
+      <Link to={homePageRoute()}>Objstor</Link>
       <Heading>Change Password</Heading>
       <FormControl onSubmit={onSubmit} isRequired>
         <FormLabel htmlFor="username">Username</FormLabel>
