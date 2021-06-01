@@ -43,6 +43,8 @@ async fn server(s: &Serve) -> Result<Server<State>> {
 
     app.at("/api").nest({
         let mut app = tide::with_state(state);
+        app.at("/password").post(api::user::change_password);
+
         app.with(tide_http_auth::Authentication::new(
             tide_http_auth::BasicAuthScheme::default(),
         ));

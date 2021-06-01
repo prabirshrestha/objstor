@@ -16,6 +16,7 @@ driftwood = "0.0.6"
 mime_guess = "2.0.3"
 objstor = { path = "../objstor" }
 rust-embed = "5.9.0"
+serde = { version = "1.0.126", features = ["derive"] }
 sqlite-provider = { path = "../sqlite-provider" }
 surf = { version = "2.2.0", default-features = false, features = [ "h1-client-rustls", "middleware-logger", "encoding" ] }
 tide = { version = "0.16.0" }

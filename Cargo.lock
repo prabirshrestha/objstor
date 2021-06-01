@@ -1385,6 +1385,7 @@ dependencies = [
  "mime_guess",
  "objstor",
  "rust-embed",
+ "serde",
  "sqlite-provider",
  "surf",
  "tide",
