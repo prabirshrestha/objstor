@@ -30,6 +30,14 @@ objstor --help
 objstor serve
 ```
 
+# APIs
+
+## Change Password
+
+```bash
+curl -X POST -i 'http://127.0.0.1:5000/api/password' --data '{"username":"admin","current_password": "admin", "new_password": "admin1"}'
+```
+
 # LICENSE
 
 MIT

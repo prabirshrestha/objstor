@@ -18,7 +18,7 @@ struct ClientAssets;
 struct ClientAssets;
 
 pub async fn serve(s: &Serve) -> Result<()> {
-    tide::log::start();
+    // tide::log::start();
 
     let app = server(&s).await?;
 
@@ -39,8 +39,12 @@ async fn server(s: &Serve) -> Result<Server<State>> {
     let mut app = tide::with_state(get_state(&s).await?);
     let state = app.state().clone();
 
+    app.with(driftwood::ApacheCombinedLogger);
+
     app.at("/api").nest({
         let mut app = tide::with_state(state);
+        app.at("/password").post(api::user::change_password);
+
         app.with(tide_http_auth::Authentication::new(
             tide_http_auth::BasicAuthScheme::default(),
         ));

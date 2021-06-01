@@ -29,6 +29,11 @@ pub trait UserObjstorProvider {
     async fn register_user(&self, user: &User) -> Result<String, ObjstorError>;
     async fn validate_user(&self, username: &str, password: &str) -> Result<bool, ObjstorError>;
     async fn get_user_by_username(&self, username: &str) -> Result<Option<User>, ObjstorError>;
+    async fn update_user_password(
+        &self,
+        username: &str,
+        new_password: &str,
+    ) -> Result<(), ObjstorError>;
 }
 
 const NANOID_ALPHABET: [char; 36] = [
