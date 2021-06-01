@@ -1,5 +1,5 @@
 import { Link as ChakraUiLink, LinkProps as ChakraUiLinkProps} from '@chakra-ui/react';
-import { Link as ReactRouterLink, LinkProps } from 'react-router-dom';
+import { Link as ReactRouterLink } from 'react-router-dom';
 
 export const Link = (props: ChakraUiLinkProps & { to: string }) => {
   return (
