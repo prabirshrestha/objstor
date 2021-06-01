@@ -103,7 +103,7 @@ impl UserObjstorProvider for SqliteObjstorProvider {
     async fn get_user_by_username(&self, username: &str) -> Result<Option<User>, ObjstorError> {
         let user: Option<User> = sqlx::query("SELECT * from user where username=?")
             .bind(username)
-            .map(|row| row_to_user(row))
+            .map(row_to_user)
             .fetch_optional(&self.pool)
             .await
             .map_err(|e| ObjstorError::ConnectionError(e.to_string()))?;
