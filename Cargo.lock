@@ -1384,13 +1384,23 @@ dependencies = [
  "driftwood",
  "mime_guess",
  "objstor",
+ "objstor-sqlite-provider",
  "rust-embed",
  "serde",
- "sqlite-provider",
  "surf",
  "tide",
  "tide-http-auth",
  "webdav",
+]
+
+[[package]]
+name = "objstor-sqlite-provider"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "objstor",
+ "sqlx",
 ]
 
 [[package]]
@@ -1974,16 +1984,6 @@ dependencies = [
  "nom 6.1.2",
  "regex",
  "unicode_categories",
-]
-
-[[package]]
-name = "sqlite-provider"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "async-trait",
- "objstor",
- "sqlx",
 ]
 
 [[package]]

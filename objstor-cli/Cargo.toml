@@ -3,6 +3,11 @@ name = "objstor-cli"
 version = "0.1.0"
 authors = ["Prabir Shrestha <mail@prabir.me>"]
 edition = "2018"
+include = ["../client/build"]
+
+[[bin]]
+name = "objstor"
+path = "src/main.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -17,7 +22,7 @@ mime_guess = "2.0.3"
 objstor = { path = "../objstor" }
 rust-embed = "5.9.0"
 serde = { version = "1.0.126", features = ["derive"] }
-sqlite-provider = { path = "../sqlite-provider" }
+objstor-sqlite-provider = { path = "../sqlite-provider" }
 surf = { version = "2.2.0", default-features = false, features = [ "h1-client-rustls", "middleware-logger", "encoding" ] }
 tide = { version = "0.16.0" }
 tide-http-auth = "0.4.0"
