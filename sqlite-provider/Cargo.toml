@@ -1,5 +1,5 @@
 [package]
-name = "sqlite-provider"
+name = "objstor-sqlite-provider"
 version = "0.1.0"
 authors = ["Prabir Shrestha <mail@prabir.me>"]
 edition = "2018"

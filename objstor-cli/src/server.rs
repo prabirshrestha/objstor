@@ -1,7 +1,7 @@
 use crate::{api, config::Serve, state::State};
 use anyhow::Result;
+use objstor_sqlite_provider::SqliteObjstorProvider;
 use rust_embed::RustEmbed;
-use sqlite_provider::SqliteObjstorProvider;
 use tide::{prelude::*, Request, Response, Server};
 use webdav::WebdavHandler;
 
